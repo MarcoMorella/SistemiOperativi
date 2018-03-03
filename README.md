@@ -4,6 +4,7 @@ SO Project 2017/18
 Project for the SO course at Sapienza University of Rome under the supervision of Prof. Giorgio Grisetti.
 The following is the guideline of the project.
 
+
 Semaphores in DisastrOS
 
    implement the following system calls in DisastrOS
@@ -30,4 +31,9 @@ Semaphores in DisastrOS
    //returns 0 on success, an error code on failure 
    int DisastrOS_semPost(int semnum);
 
+DisastrOS original code developed by instructor Giorgio Grisetti.
+
+Project developed by 
+Silvio Dei Giudici
+Marco Morella
 
