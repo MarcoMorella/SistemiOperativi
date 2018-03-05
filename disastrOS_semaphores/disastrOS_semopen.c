@@ -19,7 +19,7 @@ void internal_semOpen(){
 
   //let's check if the semaphore isn't already opened
   ListHead semaphores = running->sem_descriptors; //semaphores open in this process
-  int check1 = MySearch(&semaphores, semnum); //this returns 1 if the process already has a semaphore with id = semnum
+  SemDescriptor* check1 = MySearch(&semaphores, semnum); //this returns 1 if the process already has a semaphore with id = semnum
 
   if(check1){
 
@@ -33,12 +33,12 @@ void internal_semOpen(){
 
   if(!ourSem) { //if its opened we don't want to re-alloc
 
-  ourSem = Semaphore_alloc(semnum,value);
-  //there shouldn't be any instance where this returns an error,so no check here
+    ourSem = Semaphore_alloc(semnum,value);
+    //there shouldn't be any instance where this returns an error,so no check here
 
-  //we are adding the new semaphore to the global semaphores list of disastrOS (defined in disastros.c)
-  List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem); //first argument is the first element,second is the last element,sem is the element we want to insert,casted to ListItem as required
-}
+    //we are adding the new semaphore to the global semaphores list of disastrOS (defined in disastros.c)
+    List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem); //first argument is the first element,second is the last element,sem is the element we want to insert,casted to ListItem as required
+  }
 
   //let's create a descriptor so we can add it to the PCB of this process
 
@@ -55,7 +55,7 @@ void internal_semOpen(){
   SemDescriptorPtr * ptr = SemDescriptorPtr_alloc(dsc);
   dsc->ptr = ptr;
 
-  //adding the ptr to the list of the process
+  //adding the dsc to the list of the process
   List_insert(&running-> sem_descriptors,running->sem_descriptors.last,(ListItem*) dsc);
 
   //adding the ptr to the list of the semaphore

@@ -61,6 +61,18 @@ SemDescriptor*  SemDescriptorList_byFd(ListHead* l, int fd){
   return 0;
 }
 
+SemDescriptorPtr*  SemDescriptorPtrList_bySd(ListHead* l, SemDescriptor* sd){
+  ListItem* aux=l->first;
+  while(aux){
+    SemDescriptorPtr* d=(SemDescriptorPtr*)aux;
+    if (d->descriptor==sd)
+      return d;
+    aux=aux->next;
+  }
+  return NULL;
+}
+
+
 SemDescriptorPtr* SemDescriptorPtr_alloc(SemDescriptor* descriptor) {
   SemDescriptorPtr* d=PoolAllocator_getBlock(&_sem_descriptor_ptr_allocator);
   if (!d)
@@ -89,14 +101,14 @@ void SemDescriptorList_print(ListHead* l){
   printf("]");
 }
 
-int MySearch(ListHead* l,int key){
+SemDescriptor* MySearch(ListHead* l,int key){
     ListItem* aux=l->first;
     while(aux){
         SemDescriptor* d=(SemDescriptor*)aux;
-	    if(key == d->semaphore->id) return 1;
+	    if(key == d->semaphore->id) return d;
         aux=aux->next;
     }
-    return 0;
+    return NULL;
 }
 
 
