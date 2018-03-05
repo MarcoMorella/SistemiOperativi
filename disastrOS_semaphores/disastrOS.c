@@ -184,13 +184,13 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
 
   // fill these with the syscall handlers
   syscall_vector[DSOS_CALL_SEMOPEN]      = internal_semOpen;
-  syscall_numarg[DSOS_CALL_SEMOPEN]      = 2;       //original was set to 1,but we need 2(id and value)
+  syscall_numarg[DSOS_CALL_SEMOPEN]      = 2;       //original was set to 1,but we need 2(semnum and value)
 
   syscall_vector[DSOS_CALL_SEMCLOSE]      = internal_semClose;
   syscall_numarg[DSOS_CALL_SEMCLOSE]      = 1;
 
   syscall_vector[DSOS_CALL_SEMPOST]      = internal_semPost;
-  syscall_numarg[DSOS_CALL_SEMPOST]      = 1;       //original was set to 2,but we need only 1(only id)
+  syscall_numarg[DSOS_CALL_SEMPOST]      = 1;       //original was set to 2,but we need only 1(only semnum)
 
   syscall_vector[DSOS_CALL_SEMWAIT]      = internal_semWait;
   syscall_numarg[DSOS_CALL_SEMWAIT]      = 1;
@@ -295,17 +295,17 @@ int disastrOS_getpid(){
 
 //here we should tell DisastrOS how to handle semaphores functions,returning an handler function
 //DSOS_CALL_<OPERATION> are already defined in disastrOS_constants.h
-int disastrOS_semOpen(int id,int value){
-      return disastrOS_syscall(DSOS_CALL_SEMOPEN, id, value);   //maybe we don't need value in the return function
+int disastrOS_semOpen(int semnum,int value){
+      return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
 }
-int disastrOS_semClose(int id){
-      return disastrOS_syscall(DSOS_CALL_SEMCLOSE, id);
+int disastrOS_semClose(int semnum){
+      return disastrOS_syscall(DSOS_CALL_SEMCLOSE,semnum);
 }
-int disastrOS_semPost(int id){
-      return disastrOS_syscall(DSOS_CALL_SEMPOST, id);
+int disastrOS_semPost(int semnum){
+      return disastrOS_syscall(DSOS_CALL_SEMPOST,semnum);
 }
-int disastrOS_semWait(int id){
-      return disastrOS_syscall(DSOS_CALL_SEMWAIT, id);
+int disastrOS_semWait(int semnum){
+      return disastrOS_syscall(DSOS_CALL_SEMWAIT,semnum);
 }
 
 int disastrOS_openResource(int resource_id, int type, int mode) {
