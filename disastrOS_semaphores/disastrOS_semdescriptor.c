@@ -89,6 +89,16 @@ void SemDescriptorList_print(ListHead* l){
   printf("]");
 }
 
+int MySearch(ListHead* l,int key){
+    ListItem* aux=l->first;
+    while(aux){
+        SemDescriptor* d=(SemDescriptor*)aux;
+	    if(key == d->semaphore->id) return 1;
+        aux=aux->next;
+    }
+    return 0;
+}
+
 
 void SemDescriptorPtrList_print(ListHead* l){
   ListItem* aux=l->first;
