@@ -5,6 +5,7 @@
 #include "disastrOS_syscalls.h"
 #include "disastrOS_semaphore.h"
 #include "disastrOS_semdescriptor.h"
+#include "disastrOS_globals.h"
 
 
 #define ERRORINFD -64
@@ -16,8 +17,6 @@ void internal_semOpen(){
 
   int value = running->syscall_args[1];
 
-  ListHead semaphores_list = getSemaphoresList();
-
   //let's check if the semaphore isn't already opened
   ListHead semaphores = running->sem_descriptors; //semaphores open in this process
   int check1 = MySearch(&semaphores, semnum); //this returns 1 if the process already has a semaphore with id = semnum
@@ -28,6 +27,7 @@ void internal_semOpen(){
       return;
   }
 
+  //semaphores_list is defined in disastrOS.c and declared in disastrOS_globals
   Semaphore* ourSem = SemaphoreList_byId(&semaphores_list, semnum); //checking if the semaphore is opened in the system
   //^this either returns a clean semaphore uninitiliazed either an already initialized semaphore,we can use it as our semaphore.
 

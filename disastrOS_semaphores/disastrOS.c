@@ -308,10 +308,6 @@ int disastrOS_semWait(int semnum){
       return disastrOS_syscall(DSOS_CALL_SEMWAIT,semnum);
 }
 
-ListHead getSemaphoresList(){
-    return semaphores_list;
-}
-
 int disastrOS_openResource(int resource_id, int type, int mode) {
   return disastrOS_syscall(DSOS_CALL_OPEN_RESOURCE, resource_id, type, mode);
 }
