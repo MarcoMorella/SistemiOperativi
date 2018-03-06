@@ -6,9 +6,8 @@
 #include "disastrOS_semaphore.h"
 #include "disastrOS_semdescriptor.h"
 #include "disastrOS_globals.h"
+#include "disastrOS_constants.h"
 
-
-#define ERRORINFD -64
 void internal_semOpen(){
   //let's do stuff ;)
 
@@ -39,12 +38,11 @@ void internal_semOpen(){
     //we are adding the new semaphore to the global semaphores list of disastrOS (defined in disastros.c)
     List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem); //first argument is the first element,second is the last element,sem is the element we want to insert,casted to ListItem as required
   }
-
   //let's create a descriptor so we can add it to the PCB of this process
 
   SemDescriptor* dsc = SemDescriptor_alloc(running->last_fd,ourSem,running);   //returns 0 if there is any error
   if(!dsc) {
-      running->syscall_retvalue = ERRORINFD;
+      running->syscall_retvalue = DSOS_ECREATEFD;
       return;
   }
 
