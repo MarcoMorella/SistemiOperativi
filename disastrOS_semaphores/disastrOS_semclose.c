@@ -16,17 +16,16 @@ void internal_semClose(){
   int semnum = running->syscall_args[0];
   int ret;
 
-  ListHead descriptor_list = running->sem_descriptors;
-  SemDescriptor* semdescriptor = MySearch(&descriptor_list, semnum);
+  SemDescriptor* semdescriptor = MySearch(&(running->sem_descriptors), semnum);
 
   Semaphore* semaphore = SemaphoreList_byId(&semaphores_list, semnum);
-  ListHead descriptor_ptr_list = semaphore->descriptors;
-  SemDescriptorPtr* semdescriptor_ptr = SemDescriptorPtrList_bySd(&descriptor_ptr_list, semdescriptor);
+
+  SemDescriptorPtr* semdescriptor_ptr = SemDescriptorPtrList_bySd(&(semaphore->descriptors), semdescriptor);
 
   if(semdescriptor){ //check if there's the semaphore in this process
 
     //delete semdescriptor from descriptor's list of the process that call this function
-    semdescriptor = (SemDescriptor*) List_detach(&descriptor_list, (ListItem*) semdescriptor);
+    semdescriptor = (SemDescriptor*) List_detach(&(running->sem_descriptors), (ListItem*) semdescriptor);
     ret = SemDescriptor_free(semdescriptor);
     if(ret != 0) {
       running->syscall_retvalue = ERRORRET;
@@ -34,7 +33,7 @@ void internal_semClose(){
     }
 
     //delete semdescriptor_ptr from semDescriptorPtr's list of the semaphore with id = semnum
-    semdescriptor_ptr = (SemDescriptorPtr*) List_detach(&descriptor_ptr_list, (ListItem*) semdescriptor_ptr);
+    semdescriptor_ptr = (SemDescriptorPtr*) List_detach(&(semaphore->descriptors), (ListItem*) semdescriptor_ptr);
     ret = SemDescriptorPtr_free (semdescriptor_ptr);
     if(ret != 0) {
       running->syscall_retvalue = ERRORRET;
@@ -49,7 +48,7 @@ void internal_semClose(){
   }
 
   //now if semaphore doesn't have any descriptorPtr it means that it should be unlinked
-  if(descriptor_ptr_list.size == 0){
+  if((semaphore->descriptors).size == 0){
     semaphore = (Semaphore*) List_detach(&semaphores_list, (ListItem*) semaphore);
     ret = Semaphore_free(semaphore);
     if(ret != 0) {
