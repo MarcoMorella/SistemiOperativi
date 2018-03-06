@@ -93,6 +93,12 @@ void initFunction(void* args) {
 
   printf("Value ret of semclose: %d\n", ret);
 
+  printf("CLOSE SEM ANOTHER TIME\n");
+  ret = disastrOS_semClose(30);
+  disastrOS_printStatus();
+
+  printf("Value ret of semclose: %d\n", ret);
+
   /*
   disastrOS_spawn(sleeperFunction, 0);
 
