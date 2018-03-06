@@ -29,6 +29,25 @@ void childFunction(void* args){
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
+void semaphore_testing(void* args){
+
+  printf("OPEN SEM IN CHILD\n");
+
+  int ret = disastrOS_semOpen(10, 4);
+  disastrOS_printStatus();
+
+  printf("Value ret of semopen: %d\n", ret);
+
+  printf("CLOSE SEM IN CHILD\n");
+  ret = disastrOS_semClose(10);
+  disastrOS_printStatus();
+
+  printf("Value ret of semclose: %d\n", ret);
+
+  disastrOS_exit(disastrOS_getpid()+1); //IMPORTANT.. if you don't want to burn your cpu
+
+}
+
 
 void initFunction(void* args) {
   disastrOS_printStatus();
@@ -50,6 +69,18 @@ void initFunction(void* args) {
 
   printf("Value ret of semopen: %d\n", ret);
 
+  //Now i spawn a new process
+
+  disastrOS_spawn(semaphore_testing, 0);
+
+  int pid;
+  int retval;
+  pid = disastrOS_wait(0, &retval);
+
+  printf("Pid: %d, Retval: %d\n", pid, retval);
+
+  //child closed and now we close semaphores also for init
+
   printf("CLOSE SEM\n");
   ret = disastrOS_semClose(10);
   disastrOS_printStatus();
@@ -61,7 +92,6 @@ void initFunction(void* args) {
   disastrOS_printStatus();
 
   printf("Value ret of semclose: %d\n", ret);
-
 
   /*
   disastrOS_spawn(sleeperFunction, 0);
