@@ -147,6 +147,7 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   Resource_init();
   Descriptor_init();
   Semaphore_init();
+  SemDescriptor_init();
   init_pcb=0;
 
   // populate the vector of syscalls and number of arguments for each syscall
@@ -297,7 +298,7 @@ int disastrOS_getpid(){
 //here we should tell DisastrOS how to handle semaphores functions,returning an handler function
 //DSOS_CALL_<OPERATION> are already defined in disastrOS_constants.h
 int disastrOS_semOpen(int semnum,int value){
-      return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
+      return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum,value);
 }
 int disastrOS_semClose(int semnum){
       return disastrOS_syscall(DSOS_CALL_SEMCLOSE,semnum);
