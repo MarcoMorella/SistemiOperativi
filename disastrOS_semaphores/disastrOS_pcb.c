@@ -55,7 +55,7 @@ PCB* PCB_alloc() {
   pcb->timer=0;
   List_init(&pcb->children);
   pcb->last_sem_fd=0;
-  List_init(&pcb->descriptors);
+  List_init(&pcb->sem_descriptors);
   return pcb;
 }
 
@@ -116,7 +116,7 @@ void PCBPtrList_print(ListHead* head) {
 
 void PCB_print(PCB* pcb){
   printf("[pid: %d, child: ", pcb->pid);
-  
+
   PCBPtrList_print(&pcb->children);
   printf("]");
 }
