@@ -33,8 +33,23 @@ void childFunction(void* args){
 void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
+
+
+  //testing open and close for a single process
+  printf("OPENING the sem");
+
+  int ret = disastrOS_semOpen(10, 4);
+  printf("%d\n",ret);
+  disastrOS_printStatus();
+
+  printf("closing the sem");
+  ret = disastrOS_semClose(10);
+  disastrOS_printStatus();
+
+
+  /*
   disastrOS_spawn(sleeperFunction, 0);
-  
+
 
   printf("I feel like to spawn 10 nice threads\n");
   int alive_children=0;
@@ -52,12 +67,12 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   int retval;
   int pid;
-  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
+  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){
     disastrOS_printStatus();
     printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
 	   pid, retval, alive_children);
     --alive_children;
-  }
+  }*/
   printf("shutdown!");
   disastrOS_shutdown();
 }
