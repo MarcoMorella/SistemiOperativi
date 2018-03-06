@@ -62,6 +62,14 @@ void initFunction(void* args) {
 
   printf("Value ret of semopen: %d\n", ret);
 
+  printf("OPEN SEM ANOTHER TIME\n");
+
+  ret = disastrOS_semOpen(10, 4);
+  disastrOS_printStatus();
+
+  printf("Value ret of semopen: %d\n", ret);
+
+
   printf("OPEN SEM\n");
 
   ret = disastrOS_semOpen(30, 1);
