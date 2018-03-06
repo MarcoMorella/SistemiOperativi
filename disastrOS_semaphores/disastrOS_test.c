@@ -36,15 +36,31 @@ void initFunction(void* args) {
 
 
   //testing open and close for a single process
-  printf("OPENING the sem");
+  printf("OPEN SEM\n");
 
   int ret = disastrOS_semOpen(10, 4);
-  printf("%d\n",ret);
   disastrOS_printStatus();
 
-  printf("closing the sem");
+  printf("Value ret of semopen: %d\n", ret);
+
+  printf("OPEN SEM\n");
+
+  ret = disastrOS_semOpen(30, 1);
+  disastrOS_printStatus();
+
+  printf("Value ret of semopen: %d\n", ret);
+
+  printf("CLOSE SEM\n");
   ret = disastrOS_semClose(10);
   disastrOS_printStatus();
+
+  printf("Value ret of semclose: %d\n", ret);
+
+  printf("CLOSE SEM\n");
+  ret = disastrOS_semClose(30);
+  disastrOS_printStatus();
+
+  printf("Value ret of semclose: %d\n", ret);
 
 
   /*
