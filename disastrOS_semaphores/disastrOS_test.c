@@ -68,6 +68,8 @@ void semaphore_testing(void* args){
   //disastrOS_printStatus();
 
   //printf("Value ret of semclose: %d\n", ret);
+  printf("I AM HERE,segmenting after this exit :( \n");
+  disastrOS_printStatus();
 
   disastrOS_exit(disastrOS_getpid()+1); //IMPORTANT.. if you don't want to burn your cpu
 
@@ -125,6 +127,7 @@ void initFunction(void* args) {
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^START SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
   ret = disastrOS_semWait(fd1);
+
 
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^END SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
@@ -187,6 +190,7 @@ void initFunction(void* args) {
 	   pid, retval, alive_children);
     --alive_children;
   }*/
+
   printf("shutdown!");
   disastrOS_shutdown();
 }

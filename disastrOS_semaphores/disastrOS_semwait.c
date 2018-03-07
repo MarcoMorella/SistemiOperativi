@@ -37,14 +37,17 @@ void internal_semWait(){
 
     if (semaphore -> count < 0){
 
-        //let's remove the process from the running list and place him in the waiting list of the OS
-        List_detach(&ready_list,(ListItem*) running);
-        List_insert(&waiting_list,waiting_list.last,(ListItem*) running);
-
-        //and change his status to waiting
-        running -> status = Waiting;
+        //scheduling : putting the running process in waiting and starting the next one
+        running->status=Waiting;
+        List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
+        if (ready_list.first)
+            running=(PCB*) List_detach(&ready_list, ready_list.first);
+        else {
+            running=0;
+            printf ("No process can run\n");
     }
 
+    }
 
     running -> syscall_retvalue = 0;
     return;

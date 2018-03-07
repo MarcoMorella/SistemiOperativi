@@ -22,7 +22,7 @@ void internal_semOpen(){
 
   if(check1){
 
-      running->syscall_retvalue = semnum;
+      running->syscall_retvalue = check1->fd;
       return;
   }
 
