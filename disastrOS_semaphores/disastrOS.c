@@ -300,14 +300,14 @@ int disastrOS_getpid(){
 int disastrOS_semOpen(int semnum,int value){
       return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum,value);
 }
-int disastrOS_semClose(int semnum){
-      return disastrOS_syscall(DSOS_CALL_SEMCLOSE,semnum);
+int disastrOS_semClose(int fd){
+      return disastrOS_syscall(DSOS_CALL_SEMCLOSE,fd);
 }
-int disastrOS_semPost(int semnum){
-      return disastrOS_syscall(DSOS_CALL_SEMPOST,semnum);
+int disastrOS_semPost(int fd){
+      return disastrOS_syscall(DSOS_CALL_SEMPOST,fd);
 }
-int disastrOS_semWait(int semnum){
-      return disastrOS_syscall(DSOS_CALL_SEMWAIT,semnum);
+int disastrOS_semWait(int fd){
+      return disastrOS_syscall(DSOS_CALL_SEMWAIT,fd);
 }
 
 int disastrOS_openResource(int resource_id, int type, int mode) {
