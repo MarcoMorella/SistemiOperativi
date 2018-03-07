@@ -39,7 +39,7 @@ void semaphore_testing(void* args){
   printf("Value ret of semopen: %d\n", ret);
 
   printf("CLOSE SEM IN CHILD\n");
-  ret = disastrOS_semClose(10);
+  ret = disastrOS_semClose(ret);
   disastrOS_printStatus();
 
   printf("Value ret of semclose: %d\n", ret);
@@ -53,29 +53,31 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
 
+  int fd1, fd2, ret;
+
 
   //testing open and close for a single process
   printf("OPEN SEM\n");
 
-  int ret = disastrOS_semOpen(10, 4);
+  fd1 = disastrOS_semOpen(10, 4);
   disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", ret);
+  printf("Value ret of semopen: %d\n", fd1);
 
   printf("OPEN SEM ANOTHER TIME\n");
 
-  ret = disastrOS_semOpen(10, 4);
+  fd2 = disastrOS_semOpen(10, 4);
   disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", ret);
+  printf("Value ret of semopen: %d\n", fd2);
 
 
   printf("OPEN SEM\n");
 
-  ret = disastrOS_semOpen(30, 1);
+  fd2 = disastrOS_semOpen(30, 1);
   disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", ret);
+  printf("Value ret of semopen: %d\n", fd2);
 
   //Now i spawn a new process
 
@@ -90,19 +92,19 @@ void initFunction(void* args) {
   //child closed and now we close semaphores also for init
 
   printf("CLOSE SEM\n");
-  ret = disastrOS_semClose(10);
+  ret = disastrOS_semClose(fd1);
   disastrOS_printStatus();
 
   printf("Value ret of semclose: %d\n", ret);
 
   printf("CLOSE SEM\n");
-  ret = disastrOS_semClose(30);
+  ret = disastrOS_semClose(fd2);
   disastrOS_printStatus();
 
   printf("Value ret of semclose: %d\n", ret);
 
   printf("CLOSE SEM ANOTHER TIME\n");
-  ret = disastrOS_semClose(30);
+  ret = disastrOS_semClose(fd2);
   disastrOS_printStatus();
 
   printf("Value ret of semclose: %d\n", ret);
