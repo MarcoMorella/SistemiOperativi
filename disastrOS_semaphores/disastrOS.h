@@ -29,10 +29,10 @@ void disastrOS_spawn(void (*f)(void*), void* args );
 void disastrOS_shutdown();
 
 //semaphores syscalls,because this file should be a syscalls vector
-int disastrOS_semOpen(int id,int value);
-int disastrOS_semClose(int id);
-int disastrOS_semPost(int id);
-int disastrOS_semWait(int id);
+int disastrOS_semOpen(int semnum,int value);
+int disastrOS_semClose(int fd);
+int disastrOS_semPost(int fd);
+int disastrOS_semWait(int fd);
 
 // timers
 void disastrOS_sleep(int);
