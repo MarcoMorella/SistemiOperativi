@@ -3,6 +3,8 @@
 #include <poll.h>
 
 #include "disastrOS.h"
+#include "disastrOS_semaphore.h"
+#include "disastrOS_globals.h"
 
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -31,18 +33,41 @@ void childFunction(void* args){
 
 void semaphore_testing(void* args){
 
-  printf("OPEN SEM IN CHILD\n");
+  //printf("OPEN SEM IN CHILD\n");
 
-  int ret = disastrOS_semOpen(10, 4);
+  int semnum = *((int*)args);
+
+  int fd2 = disastrOS_semOpen(semnum, 0); //PROVA A CAMBIARE VALORE QUIII
+  int fd1 = disastrOS_semOpen(10, 0);
+  //disastrOS_printStatus();
+
+  //printf("Value ret of semopen: %d\n", fd);
+
+  printf("*******************************START SEMPOST IN CHILD***********************************\n");
+
+  int ret = disastrOS_semPost(fd1);
+
+  printf("*******************************END SEMPOST IN CHILD***********************************\n");
+
+  disastrOS_printStatus();
+  printf("*******************************START SEMWAIT IN CHILD***********************************\n");
+
+  ret = disastrOS_semWait(fd2);
+
+  printf("*******************************END SEMWAIT IN CHILD***********************************\n");
+
+  //printf("*******************************EXIT FROM SEMWAIT IN CHILD***********************************\n");
+
+  printf("Value ret of semWait: %d\n", ret);
+
   disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", ret);
+  //printf("CLOSE SEM IN CHILD\n");
+  ret = disastrOS_semClose(fd1);
+  ret = disastrOS_semClose(fd2);
+  //disastrOS_printStatus();
 
-  printf("CLOSE SEM IN CHILD\n");
-  ret = disastrOS_semClose(ret);
-  disastrOS_printStatus();
-
-  printf("Value ret of semclose: %d\n", ret);
+  //printf("Value ret of semclose: %d\n", ret);
 
   disastrOS_exit(disastrOS_getpid()+1); //IMPORTANT.. if you don't want to burn your cpu
 
@@ -55,59 +80,86 @@ void initFunction(void* args) {
 
   int fd1, fd2, ret;
 
+  int semnum1 = 10;
+  int semnum2 = 30;
+
 
   //testing open and close for a single process
-  printf("OPEN SEM\n");
+  //printf("OPEN SEM\n");
 
-  fd1 = disastrOS_semOpen(10, 4);
-  disastrOS_printStatus();
+  //fd1 = disastrOS_semOpen(semnum1, 4);
+  //disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", fd1);
+  //printf("Value ret of semopen: %d\n", fd1);
 
-  printf("OPEN SEM ANOTHER TIME\n");
+  //printf("OPEN SEM ANOTHER TIME\n");
 
-  fd2 = disastrOS_semOpen(10, 4);
-  disastrOS_printStatus();
+  fd1 = disastrOS_semOpen(semnum1,0);
+  //disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", fd2);
+  //printf("Value ret of semopen: %d\n", fd2);
 
 
-  printf("OPEN SEM\n");
+  //printf("OPEN SEM\n");
 
-  fd2 = disastrOS_semOpen(30, 1);
-  disastrOS_printStatus();
+  fd2 = disastrOS_semOpen(semnum2, 0);
+  //disastrOS_printStatus();
 
-  printf("Value ret of semopen: %d\n", fd2);
+  //printf("Value ret of semopen: %d\n", fd2);
+
+  //testing wait and post
+
+  //Semaphore_print_count(&semaphores_list, semnum1);
+
+  //ret = disastrOS_semPost(fd2);
+
+  //Semaphore_print_count(&semaphores_list, semnum1);
 
   //Now i spawn a new process
 
-  disastrOS_spawn(semaphore_testing, 0);
+  disastrOS_spawn(semaphore_testing, &semnum2);
 
   int pid;
   int retval;
+
+  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^START SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+
+  ret = disastrOS_semWait(fd1);
+
+  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^END SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+
+  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^START SEMPOST IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+
+  ret = disastrOS_semPost(fd2);
+
+  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^END SEMPOST IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+
+
+  printf("Value ret of semPost: %d\n", ret);
+
   pid = disastrOS_wait(0, &retval);
 
   printf("Pid: %d, Retval: %d\n", pid, retval);
 
   //child closed and now we close semaphores also for init
 
-  printf("CLOSE SEM\n");
+  //printf("CLOSE SEM\n");
   ret = disastrOS_semClose(fd1);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
-  printf("Value ret of semclose: %d\n", ret);
+  //printf("Value ret of semclose: %d\n", ret);
 
-  printf("CLOSE SEM\n");
+  //printf("CLOSE SEM\n");
+  //ret = disastrOS_semClose(fd2);
+  //disastrOS_printStatus();
+
+  //printf("Value ret of semclose: %d\n", ret);
+
+  //printf("CLOSE SEM ANOTHER TIME\n");
   ret = disastrOS_semClose(fd2);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
-  printf("Value ret of semclose: %d\n", ret);
-
-  printf("CLOSE SEM ANOTHER TIME\n");
-  ret = disastrOS_semClose(fd2);
-  disastrOS_printStatus();
-
-  printf("Value ret of semclose: %d\n", ret);
+  //printf("Value ret of semclose: %d\n", ret);
 
   /*
   disastrOS_spawn(sleeperFunction, 0);

@@ -22,3 +22,5 @@ typedef ListHead SemaphoreList;
 Semaphore* SemaphoreList_byId(SemaphoreList* l, int id);
 
 void SemaphoreList_print(ListHead* l);
+
+void Semaphore_print_count(SemaphoreList* l, int semnum);

@@ -56,6 +56,11 @@ void Semaphore_print(Semaphore* r) {
   DescriptorPtrList_print(&r->waiting_descriptors);
 }
 
+void Semaphore_print_count(SemaphoreList* l, int semnum){
+  Semaphore* s = SemaphoreList_byId(l, semnum);
+  printf("Count = %d\n", s->count);
+}
+
 void SemaphoreList_print(ListHead* l){
   ListItem* aux=l->first;
   printf("{\n");

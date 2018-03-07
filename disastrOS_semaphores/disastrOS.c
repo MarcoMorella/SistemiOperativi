@@ -330,17 +330,17 @@ void disastrOS_printStatus(){
   if (running)
     PCB_print(running);
   printf("\n");
-  printf("Timers: ");
-  TimerList_print(&timer_list);
-  printf("\nResources: ");
-  ResourceList_print(&resources_list);
+  //printf("Timers: ");
+  //TimerList_print(&timer_list);
+  //printf("\nResources: ");
+  //ResourceList_print(&resources_list);
   printf("\nSemaphores: ");
   SemaphoreList_print(&semaphores_list);
-  printf("\nReady: ");
-  PCBList_print(&ready_list);
-  printf("\nWaiting: ");
-  PCBList_print(&waiting_list);
-  printf("\nZombie: ");
-  PCBList_print(&zombie_list);
+  //printf("\nReady: ");
+  //PCBList_print(&ready_list);
+  //printf("\nWaiting: ");
+  //PCBList_print(&waiting_list);
+  //printf("\nZombie: ");
+  //PCBList_print(&zombie_list);
   printf("\n***********************************************\n\n");
 };
