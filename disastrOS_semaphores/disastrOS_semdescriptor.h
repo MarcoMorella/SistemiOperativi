@@ -28,7 +28,6 @@ void SemDescriptorList_print(ListHead* l);
 
 SemDescriptorPtr* SemDescriptorPtr_alloc(SemDescriptor* descriptor);
 int SemDescriptorPtr_free(SemDescriptorPtr* d);
-SemDescriptorPtr*  SemDescriptorPtrList_bySd(ListHead* l, SemDescriptor* sd);
 void SemDescriptorPtrList_print(ListHead* l);
 
 SemDescriptor* MySearch(ListHead* l,int key);

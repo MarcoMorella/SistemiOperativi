@@ -24,7 +24,7 @@ void internal_semClose(){
   //get semaphore from semdescriptor
   Semaphore* semaphore = semdescriptor->semaphore; //if semdescriptor exists => semaphore exists
 
-  SemDescriptorPtr* semdescriptor_ptr = SemDescriptorPtrList_bySd(&semaphore->descriptors, semdescriptor);
+  SemDescriptorPtr* semdescriptor_ptr = semdescriptor->ptr;
   //semdescriptor_ptr's control it's not necessary (because if semdescriptor != NULL => semdescriptor_ptr != NULL)
 
   //delete semdescriptor from descriptor's list of the process that call this function

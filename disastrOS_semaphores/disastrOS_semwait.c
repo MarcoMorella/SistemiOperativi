@@ -26,11 +26,11 @@ void internal_semWait(){
     //now we check count to choose our behaviour
     Semaphore* semaphore = semdescriptor->semaphore;
 
-    SemDescriptorPtr* semdescriptorptr = (SemDescriptorPtr*) SemDescriptorPtrList_bySd(&semaphore->descriptors, semdescriptor);
+    SemDescriptorPtr* semdescriptorptr = semdescriptor->ptr;
 
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){
-        List_insert(&semaphore->waiting_descriptors, semaphore->waiting_descriptors.last, (ListItem*) semdescriptorptr);
+        List_insert(&(semdescriptor->semaphore->waiting_descriptors), semaphore->waiting_descriptors.last, (ListItem*) semdescriptorptr);
     }
     //decrease the counter
     semaphore -> count-=1;
@@ -38,7 +38,7 @@ void internal_semWait(){
     if (semaphore -> count < 0){
 
         //scheduling : putting the running process in waiting and starting the next one
-        running->status=Waiting;
+        running->status = Waiting;
         List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
         if (ready_list.first)
             running=(PCB*) List_detach(&ready_list, ready_list.first);

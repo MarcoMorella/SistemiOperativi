@@ -61,18 +61,6 @@ SemDescriptor*  SemDescriptorList_byFd(ListHead* l, int fd){
   return 0;
 }
 
-SemDescriptorPtr*  SemDescriptorPtrList_bySd(ListHead* l, SemDescriptor* sd){
-  ListItem* aux=l->first;
-  while(aux){
-    SemDescriptorPtr* d=(SemDescriptorPtr*)aux;
-    if (d->descriptor==sd)
-      return d;
-    aux=aux->next;
-  }
-  return NULL;
-}
-
-
 SemDescriptorPtr* SemDescriptorPtr_alloc(SemDescriptor* descriptor) {
   SemDescriptorPtr* d=PoolAllocator_getBlock(&_sem_descriptor_ptr_allocator);
   if (!d)
@@ -91,7 +79,7 @@ void SemDescriptorList_print(ListHead* l){
   printf("[");
   while(aux){
     SemDescriptor* d=(SemDescriptor*)aux;
-    printf("(fd: %d, rid:%d)",
+    printf("(fd: %d, semnum:%d)",
 	   d->fd,
 	   d->semaphore->id);
     if(aux->next)
@@ -117,10 +105,10 @@ void SemDescriptorPtrList_print(ListHead* l){
   printf("[");
   while(aux){
     SemDescriptorPtr* d=(SemDescriptorPtr*)aux;
-    printf("(pid: %d, fd: %d, rid:%d)",
-	   d->descriptor->fd,
-	   d->descriptor->pcb->pid,
-	   d->descriptor->semaphore->id);
+    printf("(pid: %d, fd: %d, semnum:%d)",
+    d->descriptor->pcb->pid,
+    d->descriptor->fd,
+	  d->descriptor->semaphore->id);
     if(aux->next)
       printf(", ");
     aux=aux->next;
