@@ -22,7 +22,7 @@ void internal_semPost(){
   Semaphore* semaphore = semdescriptor->semaphore; //semaphore has to exist if semdescriptor exist
 
   if(semaphore->count < 0){
-    
+
     //take head descriptor in semaphore's waiting_descriptors
     SemDescriptorPtr* head_wait_descriptor = (SemDescriptorPtr*) List_detach(&(semaphore->waiting_descriptors), (ListItem*) (semaphore->waiting_descriptors).first);
     //head_wait_descriptor can't be NULL if count < 0 because has to exist one process that wait

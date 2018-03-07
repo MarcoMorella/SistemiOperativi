@@ -12,19 +12,20 @@
 void internal_semWait(){
   // Let's do stuff!
 
-    int semnum = running->syscall_args[0];
+    int fd = running->syscall_args[0];
 
     //let's check if the process has opened the semaphore
-    SemDescriptor* searching_sem = MySearch(&running->sem_descriptors,semnum);
+    SemDescriptor* semdescriptor = (SemDescriptor*) SemDescriptorList_byFd(&(running->sem_descriptors), fd);
 
-    if(!searching_sem) {
+    if(!semdescriptor) {
         //the process didn't open the semaphore..return an error
         running->syscall_retvalue = DSOS_ENOTMYSEM;
         return;
     }
 
+
     //now we check count to choose our behaviour
-    Semaphore* semaphore = searching_sem ->semaphore;
+    Semaphore* semaphore = semdescriptor->semaphore;
 
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){
