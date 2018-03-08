@@ -26,7 +26,7 @@ void internal_semWait(){
     //now we check count to choose our behaviour
     Semaphore* semaphore = semdescriptor->semaphore;
 
-    SemDescriptorPtr* semdescriptorptr = semdescriptor->ptr;
+    SemDescriptorPtr* semdescriptorptr = SemDescriptorPtr_alloc(semdescriptor);
 
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){

@@ -40,7 +40,8 @@ void internal_semOpen(){
   }
   //let's create a descriptor so we can add it to the PCB of this process
 
-  SemDescriptor* dsc = SemDescriptor_alloc(running->last_fd,ourSem,running);   //returns 0 if there is any error
+
+  SemDescriptor* dsc = SemDescriptor_alloc(running->last_sem_fd,ourSem,running);   //returns 0 if there is any error
   if(!dsc) {
       running->syscall_retvalue = DSOS_ECREATEFD;
       return;
