@@ -62,5 +62,9 @@ libdisastrOS.a: $(OBJS) $(HEADERS)
 disastrOS_test:		disastrOS_test.c $(LIBS)
 	$(CC) $(CCOPTS) -o $@ $^
 
+disastrOS_testNEW:		disastrOS_testNEW.c $(LIBS)
+	$(CC) $(CCOPTS) -o $@ $^
+
+
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)
