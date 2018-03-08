@@ -38,9 +38,9 @@ void semaphore_testing(void* args){
   int semnum1 = 10;
   int semnum2 = 30;
 
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
   int fd1 = disastrOS_semOpen(semnum1, 0);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
   int fd2 = disastrOS_semOpen(semnum2, 0);
 
 
@@ -50,38 +50,33 @@ void semaphore_testing(void* args){
 
   printf("*******************************START SEMPOST IN CHILD***********************************\n");
 
-  //disastrOS_printStatus();
+  disastrOS_printStatus();
 
   int ret;
-  //ret = disastrOS_semPost(fd1);
+  ret = disastrOS_semPost(fd1);
 
   printf("*******************************END SEMPOST IN CHILD***********************************\n");
 
-  //disastrOS_printStatus();
+  disastrOS_printStatus();
 
-  //disastrOS_printStatus();
   printf("*******************************START SEMWAIT IN CHILD***********************************\n");
 
-  //disastrOS_printStatus();
-
-  //ret = disastrOS_semWait(fd2);
+  ret = disastrOS_semWait(fd2);
 
   printf("*******************************END SEMWAIT IN CHILD***********************************\n");
-
-  //disastrOS_printStatus();
 
   //printf("*******************************EXIT FROM SEMWAIT IN CHILD***********************************\n");
 
   printf("Value ret of semWait: %d\n", ret);
 
+  disastrOS_printStatus();
+
   //disastrOS_printStatus();
 
-  //printf("CLOSE SEM IN CHILD\n");
-  disastrOS_printStatus();
   ret = disastrOS_semClose(fd1);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
   ret = disastrOS_semClose(fd2);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
   //disastrOS_printStatus();
 
   //printf("Value ret of semclose: %d\n", ret);
@@ -94,7 +89,7 @@ void semaphore_testing(void* args){
 
 
 void initFunction(void* args) {
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
   //printf("hello, I am init and I just started\n");
 
   int fd1, fd2, ret;
@@ -114,17 +109,17 @@ void initFunction(void* args) {
   //printf("OPEN SEM ANOTHER TIME\n");
 
   fd1 = disastrOS_semOpen(semnum1,0);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
-  //printf("Value ret of semopen: %d\n", fd2);
+  printf("Value ret of semopen: %d\n", fd1);
 
 
   //printf("OPEN SEM\n");
 
   fd2 = disastrOS_semOpen(semnum2, 0);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
-  //printf("Value ret of semopen: %d\n", fd2);
+  printf("Value ret of semopen: %d\n", fd2);
 
   //testing wait and post
 
@@ -138,26 +133,29 @@ void initFunction(void* args) {
 
   disastrOS_spawn(semaphore_testing, 0);
 
+  //disastrOS_printStatus();
+
   int pid;
   int retval;
 
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^START SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
-  //disastrOS_printStatus();
+  disastrOS_printStatus();
 
-  //ret = disastrOS_semWait(fd1);
+  ret = disastrOS_semWait(fd1);
 
 
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^END SEMWAIT IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
-  //disastrOS_printStatus();
+  disastrOS_printStatus();
 
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^START SEMPOST IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
-  //ret = disastrOS_semPost(fd2);
+  ret = disastrOS_semPost(fd2);
 
   printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^END SEMPOST IN FATHER^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 
+  disastrOS_printStatus();
 
   printf("Value ret of semPost: %d\n", ret);
 
@@ -165,13 +163,11 @@ void initFunction(void* args) {
 
   printf("Pid: %d, Retval: %d\n", pid, retval);
 
-  disastrOS_printStatus();
-
   //child closed and now we close semaphores also for init
 
   //printf("CLOSE SEM\n");
   ret = disastrOS_semClose(fd1);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
   //printf("Value ret of semclose: %d\n", ret);
 
@@ -183,7 +179,7 @@ void initFunction(void* args) {
 
   //printf("CLOSE SEM ANOTHER TIME\n");
   ret = disastrOS_semClose(fd2);
-  disastrOS_printStatus();
+  //disastrOS_printStatus();
 
   //printf("Value ret of semclose: %d\n", ret);
 
@@ -214,7 +210,7 @@ void initFunction(void* args) {
     --alive_children;
   }*/
 
-  printf("shutdown!");
+  printf("shutdown!\n");
   disastrOS_shutdown();
 }
 

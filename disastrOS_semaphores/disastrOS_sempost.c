@@ -25,7 +25,6 @@ void internal_semPost(){
 
     //take head descriptor in semaphore's waiting_descriptors
     SemDescriptorPtr* head_wait_descriptor = (SemDescriptorPtr*) List_detach(&(semaphore->waiting_descriptors), (ListItem*) (semaphore->waiting_descriptors).first);
-    //printf("%p\n", head_wait_descriptor);
     //head_wait_descriptor can't be NULL if count < 0 because has to exist one process that wait
 
     //drop pcb of process with head_wait_descriptor from waiting_list and put it in ready_list
@@ -33,6 +32,12 @@ void internal_semPost(){
 
     List_detach(&waiting_list, (ListItem*) pcb_head);
     List_insert(&ready_list, (ListItem*) ready_list.last, (ListItem*) pcb_head);
+
+    int ret = SemDescriptorPtr_free(head_wait_descriptor);
+    if(ret){
+      running->syscall_retvalue = ret;
+      return;
+    }
 
     //mark pcb in ready status
     pcb_head->status = Ready;
