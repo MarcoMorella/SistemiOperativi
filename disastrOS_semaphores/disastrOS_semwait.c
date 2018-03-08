@@ -26,7 +26,8 @@ void internal_semWait(){
     //now we check count to choose our behaviour
     Semaphore* semaphore = semdescriptor->semaphore;
 
-    SemDescriptorPtr* semdescriptorptr = SemDescriptorPtr_alloc(semdescriptor);
+    SemDescriptorPtr* semdescriptorptr = SemDescriptorPtr_alloc(semdescriptor); //we are allocating it to avoid a redundant pointer from
+                                                                                //the waiting descriptor list to the descriptor list that would cause a lot of errors
 
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){
@@ -37,14 +38,14 @@ void internal_semWait(){
 
     if (semaphore -> count < 0){
 
-        //scheduling : putting the running process in waiting and starting the next one
+        //scheduling : putting the running process in waiting and starting the next one in the ready list
         running->status = Waiting;
         List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
         if (ready_list.first)
             running=(PCB*) List_detach(&ready_list, ready_list.first);
         else {
-            running=0;
-            printf ("No process can run\n");
+            running=0;  //Deadlock,shouldn't happen if the test isn't faulty
+            printf ("No process can run : DEADLOCK\n");
     }
 
     }

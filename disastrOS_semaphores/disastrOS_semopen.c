@@ -20,7 +20,7 @@ void internal_semOpen(){
   ListHead semaphores = running->sem_descriptors; //semaphores open in this process
   SemDescriptor* check1 = MySearch(&semaphores, semnum); //this returns 1 if the process already has a semaphore with id = semnum
 
-  if(check1){
+  if(check1){   //if the check returns 1,we have to return the fd to the process(that already opened the semaphore!)
 
       running->syscall_retvalue = check1->fd;
       return;
@@ -36,8 +36,9 @@ void internal_semOpen(){
     //there shouldn't be any instance where this returns an error,so no check here
 
     //we are adding the new semaphore to the global semaphores list of disastrOS (defined in disastros.c)
-    List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem); //first argument is the first element,second is the last element,sem is the element we want to insert,casted to ListItem as required
+    List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem);
   }
+
   //let's create a descriptor so we can add it to the PCB of this process
 
 
@@ -61,5 +62,5 @@ void internal_semOpen(){
   List_insert(&ourSem -> descriptors, ourSem-> descriptors.last, (ListItem*) ptr);
 
   running -> syscall_retvalue = dsc -> fd ;
- return;
+  return;
 }

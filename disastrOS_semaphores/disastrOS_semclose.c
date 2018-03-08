@@ -48,7 +48,7 @@ void internal_semClose(){
     semaphore = (Semaphore*) List_detach(&semaphores_list, (ListItem*) semaphore);
     ret = Semaphore_free(semaphore);
     if(ret != 0) {
-      running->syscall_retvalue = DSOS_ERESOURCENOEXCL;
+      running->syscall_retvalue = ret;
       return;
     }
 
