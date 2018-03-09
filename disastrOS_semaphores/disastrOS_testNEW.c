@@ -11,7 +11,7 @@
 #define SEMNUM_ME1 2
 #define SEMNUM_ME2 3
 #define BUFFER_LENGTH 5
-#define ITERATIONS 30
+#define ITERATIONS 10
 #define HOWMANY 10
 
 #define ERROR_HELPER(cond, msg) do {    \
@@ -269,19 +269,13 @@ void initFunction(void* args) {
     */
 
     //printf("Spawning 10 Prods and 10 Cons\n");
-    //for (i = 0; i<HOWMANY; ++i) {
-        disastrOS_spawn(ProdFunction2,&cd);
-        disastrOS_spawn(ConsFunction2,&cd);
-
-    //}
+    for (i = 0; i<HOWMANY; ++i) {
+        disastrOS_spawn(ProdFunction,&cd);
+        disastrOS_spawn(ConsFunction,&cd);
+    }
 
     //waiting all the processes,in no particular order
-    int pid_counter = 0;
-    while(pid_counter < 2){
-    //while(pid_counter < (2*HOWMANY)){
-        disastrOS_wait(0,NULL);
-        pid_counter++;
-    }
+    for (i = 0; i<2*HOWMANY; ++i) disastrOS_wait(0,NULL);
 
     //closing the semaphores,father HAS to be the only one left using them
 
