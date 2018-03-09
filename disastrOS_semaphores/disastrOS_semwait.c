@@ -29,15 +29,10 @@ void internal_semWait(){
     SemDescriptorPtr* semdescriptorptr = SemDescriptorPtr_alloc(semdescriptor); //we are allocating it to avoid a redundant pointer from
                                                                                 //the waiting descriptor list to the descriptor list that would cause a lot of errors
 
+
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){
         List_insert(&(semdescriptor->semaphore->waiting_descriptors), semaphore->waiting_descriptors.last, (ListItem*) semdescriptorptr);
-    }
-    //decrease the counter
-    semaphore -> count-=1;
-
-    if (semaphore -> count < 0){
-
         //scheduling : putting the running process in waiting and starting the next one in the ready list
         running->status = Waiting;
         List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
@@ -46,10 +41,13 @@ void internal_semWait(){
         else {
             running=0;  //Deadlock,shouldn't happen if the test isn't faulty
             printf ("No process can run : DEADLOCK\n");
-    }
+        }
 
     }
+    semaphore -> count-=1;
+
 
     running -> syscall_retvalue = 0;
     return;
 }
+

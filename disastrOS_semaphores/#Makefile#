@@ -38,13 +38,13 @@ OBJS=pool_allocator.o\
      disastrOS_semopen.o\
      disastrOS_semclose.o\
      disastrOS_semwait.o\
-     disastrOS_sempost.o
+     disastrOS_sempost.o\
+
 
 
 LIBS=libdisastrOS.a
 
-BINS=disastrOS_test\
-			disastrOS_testNEW
+BINS=disastrOS_test
 
 #disastros_test
 
@@ -62,10 +62,6 @@ libdisastrOS.a: $(OBJS) $(HEADERS)
 
 disastrOS_test:		disastrOS_test.c $(LIBS)
 	$(CC) $(CCOPTS) -o $@ $^
-
-disastrOS_testNEW:		disastrOS_testNEW.c $(LIBS)
-	$(CC) $(CCOPTS) -o $@ $^
-
 
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)
