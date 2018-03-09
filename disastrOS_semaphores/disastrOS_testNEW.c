@@ -292,6 +292,54 @@ void initFunction(void* args) {
     disastrOS_shutdown();
 }
 
+void fun(void* args){
+
+  int* fd = (int*) args;
+  int ret;
+
+  ret = disastrOS_semPost(*fd); //post on semaphore that exists but it's not open in this process using its descriptor
+  printf("%d\n", ret);
+
+  ret = disastrOS_semWait(*fd); //wait on semaphore that exists but it's not open in this process using its descriptor
+  printf("%d\n", ret);
+
+  ret = disastrOS_semClose(*fd); //close on semaphore that exists but it's not open in this process using its descriptor
+  printf("%d\n", ret);
+
+  ret = disastrOS_semPost(7); //post on semaphore that exists but it's not open in this process using its semnum
+  printf("%d\n", ret);
+
+  ret = disastrOS_semWait(7); //wait on semaphore that exists but it's not open in this process using its semnum
+  printf("%d\n", ret);
+
+  ret = disastrOS_semClose(7); //close on semaphore that exists but it's not open in this process using its semnum
+  printf("%d\n", ret);
+
+
+  disastrOS_exit(0);
+
+}
+
+void wrongInputs(void* args){
+  int ret;
+  ret = disastrOS_semPost(6); //post on semaphore that don't exists
+  printf("%d\n", ret);
+  ret = disastrOS_semWait(6); //wait on semaphore that don't exists
+  printf("%d\n", ret);
+  ret = disastrOS_semClose(6); //close on semaphore that don't exists
+  printf("%d\n", ret);
+
+  ret = disastrOS_semOpen(7, 1); //normal open
+  printf("%d\n", ret);
+
+  disastrOS_spawn(fun, &ret);
+
+  disastrOS_wait(0,NULL);
+
+  printf("shutdown!\n");
+  disastrOS_shutdown();
+}
+
 int main(int argc, char** argv){
     char* logfilename=0;
     if (argc>1) {
@@ -303,6 +351,7 @@ int main(int argc, char** argv){
     //printf("the function pointer is: %p", childFunction);
     // spawn an init process
     printf("start\n");
-    disastrOS_start(initFunction, 0, logfilename);
+    //disastrOS_start(initFunction, 0, logfilename);
+    disastrOS_start(wrongInputs, 0, logfilename);
     return 0;
 }
