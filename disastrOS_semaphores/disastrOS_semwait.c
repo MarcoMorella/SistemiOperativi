@@ -42,8 +42,8 @@ void internal_semWait(){
         if (ready_list.first)
             running=(PCB*) List_detach(&ready_list, ready_list.first);
         else {
-            running=0;  //Deadlock,shouldn't happen if the test isn't faulty
-            printf ("No process can run : DEADLOCK\n");
+            printf ("No process can run : DEADLOCK\nShutting down the system..\n");
+            disastrOS_shutdown();
         }
 
     }
@@ -52,3 +52,4 @@ void internal_semWait(){
     running -> syscall_retvalue = 0;
     return;
 }
+
