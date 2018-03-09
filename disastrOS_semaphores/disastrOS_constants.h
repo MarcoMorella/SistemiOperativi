@@ -30,6 +30,8 @@
 #define DSOS_ERESOURCEINUSE -13
 #define DSOS_ECREATEFD -14
 #define DSOS_ENOTMYSEM -15
+#define DSOS_ECREATESEM -16
+#define DSOS_ECREATEPTR -17
 
 
 // syscall numbers

@@ -33,14 +33,16 @@ void internal_semOpen(){
   if(!ourSem) { //if its opened we don't want to re-alloc
 
     ourSem = Semaphore_alloc(semnum,value);
-    //there shouldn't be any instance where this returns an error,so no check here
+    if(!ourSem){
+      running->syscall_retvalue = DSOS_ECREATESEM; //there was a problema creating semaphore
+      return;
+    }
 
     //we are adding the new semaphore to the global semaphores list of disastrOS (defined in disastros.c)
     List_insert(&semaphores_list,semaphores_list.last,(ListItem*) ourSem);
   }
 
   //let's create a descriptor so we can add it to the PCB of this process
-
 
   SemDescriptor* dsc = SemDescriptor_alloc(running->last_sem_fd,ourSem,running);   //returns 0 if there is any error
   if(!dsc) {
@@ -53,6 +55,10 @@ void internal_semOpen(){
 
   //now the pointer
   SemDescriptorPtr * ptr = SemDescriptorPtr_alloc(dsc);
+  if(!ptr) {
+      running->syscall_retvalue = DSOS_ECREATEPTR; //there was a problem creating SemDescriptorPtr
+      return;
+  }
   dsc->ptr = ptr;
 
   //adding the dsc to the list of the process

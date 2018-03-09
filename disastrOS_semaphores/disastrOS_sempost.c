@@ -15,7 +15,7 @@ void internal_semPost(){
 
   SemDescriptor* semdescriptor = (SemDescriptor*) SemDescriptorList_byFd(&(running->sem_descriptors), fd);
   if(!semdescriptor){ //semdescriptor doesn't exist
-    running->syscall_retvalue = DSOS_ERESOURCENOFD;
+    running->syscall_retvalue = DSOS_ENOTMYSEM;
     return;
   }
 

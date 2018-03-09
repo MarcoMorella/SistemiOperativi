@@ -11,7 +11,7 @@
 #define SEMNUM_ME1 2
 #define SEMNUM_ME2 3
 #define BUFFER_LENGTH 5
-#define ITERATIONS 10
+#define ITERATIONS 30
 #define HOWMANY 10
 
 #define ERROR_HELPER(cond, msg) do {    \
@@ -159,13 +159,17 @@ void ProdFunction2(void* args){
 
     //structure containing buffer and index
     child_data* cd = (child_data*) args;
-
+    int ind = 0;
     while (1){
         ret = disastrOS_semWait(fd_empty);
         ERROR_HELPER(ret != 0, "Error semWait fd_empty");
 
+        printf("WAIT PROD:\n");
+        disastrOS_printStatus();
+
+
         n = cd->index_prod;
-        cd->c_buffer[n] = running->pid;
+        cd->c_buffer[n] = ind + 1;
         PrintBuffer(cd->c_buffer);
 
         n++;
@@ -173,12 +177,19 @@ void ProdFunction2(void* args){
 
         ret = disastrOS_semPost(fd_fill);
         ERROR_HELPER(ret != 0, "Error semPost fd_fill ");
+
+        printf("POST PROD:\n");
+        disastrOS_printStatus();
+
+        ind++;
     }
 
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
+
+    disastrOS_exit(disastrOS_getpid()+1);
 }
 
 void ConsFunction2(void* args){
@@ -192,9 +203,12 @@ void ConsFunction2(void* args){
 
     //structure containing buffer and index
     child_data* cd = (child_data*) args;
+    int ind = 0;
     while (1){
         ret = disastrOS_semWait(fd_fill);
         ERROR_HELPER(ret != 0, "Error semWait fd_fill process");
+        printf("WAIT CONS:\n");
+        disastrOS_printStatus();
 
         n = cd->index_cons;
         cd->c_buffer[n] = 0;
@@ -205,11 +219,19 @@ void ConsFunction2(void* args){
 
         ret = disastrOS_semPost(fd_empty);
         ERROR_HELPER(ret != 0, "Error semPost fd_empty process ");
+
+        printf("POST CONS:\n");
+        disastrOS_printStatus();
+
+
+        ind++;
     }
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
+
+    disastrOS_exit(disastrOS_getpid()+1);
 }
 
 
@@ -246,16 +268,17 @@ void initFunction(void* args) {
     disastrOS_wait(0,NULL);
     */
 
-    printf("Spawning 10 Prods and 10 Cons\n");
-    for (i = 0; i<HOWMANY; ++i) {
-        disastrOS_spawn(ProdFunction,&cd);
-        disastrOS_spawn(ConsFunction,&cd);
+    //printf("Spawning 10 Prods and 10 Cons\n");
+    //for (i = 0; i<HOWMANY; ++i) {
+        disastrOS_spawn(ProdFunction2,&cd);
+        disastrOS_spawn(ConsFunction2,&cd);
 
-    }
+    //}
 
     //waiting all the processes,in no particular order
     int pid_counter = 0;
-    while(pid_counter < (2*HOWMANY)){
+    while(pid_counter < 2){
+    //while(pid_counter < (2*HOWMANY)){
         disastrOS_wait(0,NULL);
         pid_counter++;
     }
