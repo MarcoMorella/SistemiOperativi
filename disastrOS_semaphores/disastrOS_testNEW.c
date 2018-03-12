@@ -159,7 +159,7 @@ void ProdFunction2(void* args){
     //structure containing buffer and index
     child_data* cd = (child_data*) args;
     int ind = 0;
-    while (ind < ITERATIONS * 30){
+    while (ind < ITERATIONS * 40){
         ret = disastrOS_semWait(fd_empty);
         ERROR_HELPER(ret != 0, "Error semWait fd_empty process ");
 
@@ -197,7 +197,7 @@ void ConsFunction2(void* args){
     //structure containing buffer and index
     child_data* cd = (child_data*) args;
     int ind = 0;
-    while (ind < ITERATIONS * 30){
+    while (ind < ITERATIONS * 40){
         ret = disastrOS_semWait(fd_fill);
         ERROR_HELPER(ret != 0, "Error semWait fd_fill process ");
 

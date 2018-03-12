@@ -61,6 +61,15 @@ void internal_semOpen(){
   }
   dsc->ptr = ptr;
 
+  SemDescriptorPtr * wait_ptr = SemDescriptorPtr_alloc(dsc);  //we are allocating it to avoid a redundant pointer from
+                                                              //the waiting descriptor list to the descriptor list that would cause a lot of errors
+  if(!wait_ptr) {
+      //if there isn't memory SemDescriptorPtr_alloc return 0
+      running->syscall_retvalue = DSOS_ECREATEPTR; //there was a problem creating SemDescriptorPtr
+      return;
+  }
+  dsc->wait_ptr = wait_ptr;
+
   //adding the dsc to the list of the process
   List_insert(&running-> sem_descriptors,running->sem_descriptors.last,(ListItem*) dsc);
 

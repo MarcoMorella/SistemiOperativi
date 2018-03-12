@@ -25,13 +25,7 @@ void internal_semWait(){
     //now we check count to choose our behaviour
     Semaphore* semaphore = semdescriptor->semaphore;
 
-    SemDescriptorPtr* semdescriptorptr = SemDescriptorPtr_alloc(semdescriptor); //we are allocating it to avoid a redundant pointer from
-                                                                                //the waiting descriptor list to the descriptor list that would cause a lot of errors
-    if(!semdescriptorptr){
-        //if there isn't memory SemDescriptorPtr_alloc return 0
-        running->syscall_retvalue = DSOS_ECREATEPTR;
-        return;
-    }
+    SemDescriptorPtr* semdescriptorptr = semdescriptor->wait_ptr; //get SemDescriptorptr for waiting_descriptors
 
     //count<=0 so the process should be put in the waiting list of the semaphore
     if (semaphore -> count <= 0){
@@ -52,4 +46,3 @@ void internal_semWait(){
     running -> syscall_retvalue = 0;
     return;
 }
-

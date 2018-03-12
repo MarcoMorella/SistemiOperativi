@@ -33,12 +33,6 @@ void internal_semPost(){
     List_detach(&waiting_list, (ListItem*) pcb_head);
     List_insert(&ready_list, (ListItem*) ready_list.last, (ListItem*) pcb_head);
 
-    int ret = SemDescriptorPtr_free(head_wait_descriptor);
-    if(ret){
-      running->syscall_retvalue = ret;
-      return;
-    }
-
     //mark pcb in ready status
     pcb_head->status = Ready;
 
