@@ -29,7 +29,8 @@ void PrintBuffer(int * buffer){
     int i;
     printf("buffer : [ %d",buffer[0]);
     for(i = 1; i < BUFFER_LENGTH;i++){
-        printf(" | %d",buffer[i]);}
+        printf(" | %d",buffer[i]);
+    }
     printf(" ]\n");
 }
 
@@ -43,6 +44,7 @@ void ProdFunction(void* args){
     int i,n,ret; //i : current Iteration   n : current block to work on   ret : return from syscalls
 
     printf("Starting producer with pid : %d\n",running->pid);
+
     //opening needed semaphores
     int fd_fill= disastrOS_semOpen(SEMNUM_FILL, 0);
     ERROR_HELPER(fd_fill < 0,"Error semOpen fd_fill process ");
@@ -76,10 +78,8 @@ void ProdFunction(void* args){
 
         ret = disastrOS_semPost(fd_me1);
         ERROR_HELPER(ret != 0, "Error semPost fd_me1 process ");
-
         ret = disastrOS_semPost(fd_fill);
         ERROR_HELPER(ret != 0, "Error semPost fd_fill process ");
-
     }
 
     //let's close everything,job's done
@@ -113,10 +113,8 @@ void ConsFunction(void* args){
     child_data* cd = (child_data*) args;
 
     for(i = 0;i < ITERATIONS;i++){
-
         ret = disastrOS_semWait(fd_fill);
         ERROR_HELPER(ret != 0, "Error semWait fd_fill process");
-
         ret = disastrOS_semWait(fd_me2);
         ERROR_HELPER(ret != 0, "Error semWait fd_me2 process ");
 
@@ -130,7 +128,6 @@ void ConsFunction(void* args){
 
         ret = disastrOS_semPost(fd_me2);
         ERROR_HELPER(ret != 0, "Error semPost fd_me2 process ");
-
         ret = disastrOS_semPost(fd_empty);
         ERROR_HELPER(ret != 0, "Error semPost fd_empty process ");
 
@@ -139,8 +136,10 @@ void ConsFunction(void* args){
 
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
+
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
+
     ret = disastrOS_semClose(fd_me2);
     ERROR_HELPER(ret != 0, "Error semClose fd_me2 process ");
 
@@ -179,6 +178,7 @@ void ProdFunction2(void* args){
 
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
+
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
 
@@ -213,8 +213,10 @@ void ConsFunction2(void* args){
 
         ind++;
     }
+
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
+
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
 
@@ -237,7 +239,6 @@ void ConsSingleFunction(void* args){
     child_data* cd = (child_data*) args;
 
     for(i = 0;i < ITERATIONS * HOWMANY;i++){
-
         ret = disastrOS_semWait(fd_fill);
         ERROR_HELPER(ret != 0, "Error semWait fd_fill process ");
 
@@ -252,12 +253,12 @@ void ConsSingleFunction(void* args){
 
         ret = disastrOS_semPost(fd_empty);
         ERROR_HELPER(ret != 0, "Error semPost fd_empty process ");
-
     }
 
 
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
+
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret != 0, "Error semClose fd_empty process ");
 
@@ -265,27 +266,24 @@ void ConsSingleFunction(void* args){
 }
 
 void ProdSingleFunction(void* args){
-    int i,n,ret; //i : current Iteration   n : current block to work on   ret : return from syscalls
+    int i,n,ret;
 
     printf("Starting producer with pid : %d\n",running->pid);
-    //opening needed semaphores
+
     int fd_fill= disastrOS_semOpen(SEMNUM_FILL, 0);
     ERROR_HELPER(fd_fill < 0,"Error semOpen fd_fill process ");
 
     int fd_empty = disastrOS_semOpen(SEMNUM_EMPTY, BUFFER_LENGTH);
     ERROR_HELPER(fd_fill < 0,"Error semOpen fd_empty process ");
 
-    //structure containing buffer and index
     child_data* cd = (child_data*) args;
 
-    //now let's use the semaphores to work the buffer
     for(i = 0;i < ITERATIONS * HOWMANY;i++){
         ret = disastrOS_semWait(fd_empty);
         ERROR_HELPER(ret != 0, "Error semWait fd_empty process ");
 
         printf("Hello, i am prod and i am in CS! Pid : %d\n",running->pid);
 
-        //using the index and advancing it
         n = cd->index_prod;
         cd->c_buffer[n] = running->pid;
         PrintBuffer(cd->c_buffer);
@@ -295,10 +293,8 @@ void ProdSingleFunction(void* args){
 
         ret = disastrOS_semPost(fd_fill);
         ERROR_HELPER(ret != 0, "Error semPost fd_fill process ");
-
     }
 
-    //let's close everything,job's done
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret != 0, "Error semClose fd_fill process ");
 
@@ -312,6 +308,7 @@ void ProdSingleFunction(void* args){
 
 void initFunction(void* args) {
     int i,ret,Input;
+    //Luke..I am your fath-..Processes,I am your father!
     printf("Hello there!We are going to test our Semaphores.\nThere are 4 possible tests right now:\n");
     printf("1)One consumer,one producer,looping until it is manageable.\n2)Multiple consumers,multiple producers,working a fixed number of iterations.\n");
     printf("3)One consumer,multiple producers,working a fixed number of iterations.\n4)Multiple consumers,one producer,working a fixed number of iterations.\nPlease insert the number of the test you want to execute: ");
@@ -320,7 +317,8 @@ void initFunction(void* args) {
 
     int c_buffer[BUFFER_LENGTH];   //populating the circular buffer
     for(i = 0;i < BUFFER_LENGTH;i++){
-        c_buffer[i] = 0;}
+        c_buffer[i] = 0;
+    }
 
     child_data cd;     //and the data structure that we'll give to the children
     cd.c_buffer = c_buffer;
@@ -329,10 +327,10 @@ void initFunction(void* args) {
 
     //let's open the semaphores in the father,so he'll unlink them at the end and there is no way children may close them totally
     int fd_fill= disastrOS_semOpen(SEMNUM_FILL, 0);
-    ERROR_HELPER(fd_fill < 0, "Error semOpen fd_ill Father");
+    ERROR_HELPER(fd_fill < 0, "Error semOpen fd_fill Father");
 
     int fd_empty = disastrOS_semOpen(SEMNUM_EMPTY, BUFFER_LENGTH);
-    ERROR_HELPER(fd_empty < 0, "Error semOpen fd_mpty Father");
+    ERROR_HELPER(fd_empty < 0, "Error semOpen fd_empty Father");
 
     int fd_me1 = disastrOS_semOpen(SEMNUM_ME1, 1);
     ERROR_HELPER(fd_me1 < 0, "Error semOpen fd_me1 Father");
@@ -397,10 +395,13 @@ void initFunction(void* args) {
 
     ret = disastrOS_semClose(fd_fill);
     ERROR_HELPER(ret!=0, "Error semClose fd_fill Father");
+
     ret = disastrOS_semClose(fd_empty);
     ERROR_HELPER(ret!=0, "Error semClose fd_empty Father");
+
     ret = disastrOS_semClose(fd_me1);
     ERROR_HELPER(ret!=0, "Error semClose fd_me1 Father");
+
     ret = disastrOS_semClose(fd_me2);
     ERROR_HELPER(ret!=0, "Error semClose fd_me2 Father");
 

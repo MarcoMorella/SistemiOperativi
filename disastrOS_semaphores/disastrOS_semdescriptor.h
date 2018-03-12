@@ -30,4 +30,4 @@ SemDescriptorPtr* SemDescriptorPtr_alloc(SemDescriptor* descriptor);
 int SemDescriptorPtr_free(SemDescriptorPtr* d);
 void SemDescriptorPtrList_print(ListHead* l);
 
-SemDescriptor* MySearch(ListHead* l,int key);
+SemDescriptor* MySearch(ListHead* l,int key); //Checking function used in sem_open to verify the existencr of the descriptor from a semnum

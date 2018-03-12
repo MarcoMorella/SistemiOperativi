@@ -52,7 +52,7 @@ void timerInterrupt(){
   if (log_file)
     fprintf(log_file, "TIME: %d\tPID: %d\tACTION: %s\n", disastrOS_time, running->pid, "TIMER_OUT");
   ++disastrOS_time;
-  //printf("time: %d\n", disastrOS_time);
+  //printf("time: %d\n", disastrOS_time);  //this is commented to better visualize the behaviour of semaphores
   internal_schedule();
   if (log_file)
     fprintf(log_file, "TIME: %d\tPID: %d\tACTION: %s\n", disastrOS_time, running->pid, "TIMER_IN");
@@ -146,6 +146,7 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   Timer_init();
   Resource_init();
   Descriptor_init();
+  //The following are needed to use semaphores functions
   Semaphore_init();
   SemDescriptor_init();
   init_pcb=0;
@@ -310,6 +311,7 @@ int disastrOS_semWait(int fd){
       return disastrOS_syscall(DSOS_CALL_SEMWAIT,fd);
 }
 
+
 int disastrOS_openResource(int resource_id, int type, int mode) {
   return disastrOS_syscall(DSOS_CALL_OPEN_RESOURCE, resource_id, type, mode);
 }
@@ -330,17 +332,17 @@ void disastrOS_printStatus(){
   if (running)
     PCB_print(running);
   printf("\n");
-  //printf("Timers: ");
-  //TimerList_print(&timer_list);
-  //printf("\nResources: ");
-  //ResourceList_print(&resources_list);
+  printf("Timers: ");
+  TimerList_print(&timer_list);
+  printf("\nResources: ");
+  ResourceList_print(&resources_list);
   printf("\nSemaphores: ");
   SemaphoreList_print(&semaphores_list);
   printf("\nReady: ");
   PCBList_print(&ready_list);
   printf("\nWaiting: ");
   PCBList_print(&waiting_list);
-  //printf("\nZombie: ");
-  //PCBList_print(&zombie_list);
+  printf("\nZombie: ");
+  PCBList_print(&zombie_list);
   printf("\n***********************************************\n\n");
 };

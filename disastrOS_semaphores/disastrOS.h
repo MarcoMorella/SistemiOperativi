@@ -28,7 +28,7 @@ void disastrOS_preempt();
 void disastrOS_spawn(void (*f)(void*), void* args );
 void disastrOS_shutdown();
 
-//semaphores syscalls,because this file should be a syscalls vector
+//semaphores syscalls,because this file is a syscalls vector
 int disastrOS_semOpen(int semnum,int value);
 int disastrOS_semClose(int fd);
 int disastrOS_semPost(int fd);

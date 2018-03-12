@@ -17,7 +17,7 @@ extern ListHead resources_list; // resources
 extern ListHead timer_list;     //timers (concrete)
 extern volatile int disastrOS_time; //global time of disastrOS
 
-extern ListHead semaphores_list; //here the declaration of semaphores_list but this variable is define in disastrOS.c
+extern ListHead semaphores_list; //here the declaration of semaphores_list but this variable is defined in disastrOS.c
 
 
 // a resource can be a device, a file or an ipc thing
